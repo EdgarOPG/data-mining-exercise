@@ -18,26 +18,34 @@ def show_data_info(data):
     numerical_info = data.iloc[:, :data.shape[1]]
     print(numerical_info.describe())
 
-def count_photos(data, column):
+def count_array_elements(data, column):
     temp = []
     for x in range(len(data)):
         temp.append(len(data.iloc[x][column]))
     data[column] = temp
     return data
 
-def create_density_plot(data):
-	data.plot(kind='density', subplots=True, layout=(3,3),
-		sharex=False)
-	plt.show()
+#Funciona pero la columna necesita no tener campos vacios o programarse para que les asigne 0 a esos
+def count_words(data, column):
+    temp = []
+    array = []
+    for x in range(len(data)):
+        array = data.iloc[x][column].split(' ')
+        temp.append(len(array))
+    data[column] = temp
+    return data
 
 def save(data):
-    data.to_csv('t.csv', index = False)
+    data.to_csv('clean_dataset.csv', index = False)
 
 if __name__ == '__main__':
+    
     data = open_file('train.json')
 
-    data = count_photos(data, 'photos')
+    data = count_array_elements(data, 'photos')
 
-    #show_data_info(data)
-    create_density_plot(data)
+    show_data_info(data)
+
+    count_words(data, 'description')
+
     save(data);
