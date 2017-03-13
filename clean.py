@@ -25,13 +25,24 @@ def count_array_elements(data, column):
     data[column] = temp
     return data
 
+def fill_missing_values_with_mean(data, column):
+    temp = data[column].fillna(data[column].mean())
+    data[column] = temp
+    return data
+
+def fill_missing_values_with_mode(data, column):
+    temp = data[column].fillna(data[column].mode()[0])
+    data[column] = temp
+    return data
+
 #Funciona pero la columna necesita no tener campos vacios o programarse para que les asigne 0 a esos
 def count_words(data, column):
     temp = []
-    array = []
     for x in range(len(data)):
-        array = data.iloc[x][column].split(' ')
-        temp.append(len(array))
+        if(data.iloc[x][column] == '        '):
+            temp.append(0)
+        else:
+            temp.append(len(data.iloc[x][column].split(' ')))
     data[column] = temp
     return data
 
@@ -39,13 +50,11 @@ def save(data):
     data.to_csv('clean_dataset.csv', index = False)
 
 if __name__ == '__main__':
-    
+
     data = open_file('train.json')
 
     data = count_array_elements(data, 'photos')
-
-    show_data_info(data)
-
+    data = count_array_elements(data, 'features')    
     count_words(data, 'description')
-
-    save(data);
+    show_data_info(data)
+    save(data[:500]);
